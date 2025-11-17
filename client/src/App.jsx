@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import Signup from "./auth/Signup";
+import Login from "./auth/Login";
+import axios from "axios";
+import { logout, sessionCheck } from "./services/auth.service";
+
+axios.defaults.baseURL = `${import.meta.env.VITE_SERVER_URL}`;
+axios.defaults.withCredentials = true;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const navigate = useNavigate();
+
+  const verifySession = async () => {
+    try {
+      const res = await sessionCheck();
+      if (!res.ok) throw new Error(res.message);
+
+      return;
+    } catch (error) {
+      if (window.location.pathname !== "/login") {
+        navigate("/login");
+        window.location.reload();
+        return;
+      }
+    }
+  };
+
+  useEffect(() => {
+    verifySession();
+  }, []);
+
+  const logingOut = async () => {
+    try {
+      const res = await logout();
+      if (!res.ok) throw new Error(res.message);
+
+      navigate("/login");
+      window.location.reload();
+      return;
+    } catch (error) {
+      return alert(error.message);
+    }
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Routes>
+        <Route path="/" element={<h1>Hola mundo</h1>} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+      <button onClick={logingOut}>click</button>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
