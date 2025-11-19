@@ -7,6 +7,7 @@ import {
 import { returnTokens } from "../utils/response-token";
 import { createAccessToken, createRefreshToken } from "../utils/tokens";
 import bcrypt from "bcrypt";
+import { User } from "../types/user";
 
 export const signup = async (
   req: Request,
@@ -78,10 +79,10 @@ export const userVerify = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const user = await getUserById(req.userId!);
+    const user = (await getUserById(req.userId!)) as User;
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    return res.status(200).json({ message: "Be a good user" });
+    return res.status(200).json({ message: "Be a good user", user });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }

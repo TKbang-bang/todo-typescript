@@ -1,0 +1,17 @@
+.home {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & .container {
+    border: 1px solid #000;
+    height: 100vh;
+    width: 35rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}

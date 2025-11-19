@@ -1,14 +1,18 @@
-import React, { useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Signup from "./auth/Signup";
 import Login from "./auth/Login";
 import axios from "axios";
-import { logout, sessionCheck } from "./services/auth.service";
+import { sessionCheck } from "./services/auth.service";
+import Home from "./home/Home";
 
 axios.defaults.baseURL = `${import.meta.env.VITE_SERVER_URL}`;
 axios.defaults.withCredentials = true;
 
+export const UserContext = createContext(null);
+
 function App() {
+  const [user, setUser] = useState({});
   const navigate = useNavigate();
 
   const verifySession = async () => {
@@ -16,6 +20,7 @@ function App() {
       const res = await sessionCheck();
       if (!res.ok) throw new Error(res.message);
 
+      setUser(res.user);
       return;
     } catch (error) {
       if (window.location.pathname !== "/login") {
@@ -30,28 +35,14 @@ function App() {
     verifySession();
   }, []);
 
-  const logingOut = async () => {
-    try {
-      const res = await logout();
-      if (!res.ok) throw new Error(res.message);
-
-      navigate("/login");
-      window.location.reload();
-      return;
-    } catch (error) {
-      return alert(error.message);
-    }
-  };
-
   return (
-    <>
+    <UserContext.Provider value={user}>
       <Routes>
-        <Route path="/" element={<h1>Hola mundo</h1>} />
+        <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-      <button onClick={logingOut}>click</button>
-    </>
+    </UserContext.Provider>
   );
 }
 

@@ -66,10 +66,10 @@ const login = async (req, res) => {
 exports.login = login;
 const userVerify = async (req, res) => {
     try {
-        const user = await (0, user_service_1.getUserById)(req.userId);
+        const user = (await (0, user_service_1.getUserById)(req.userId));
         if (!user)
             return res.status(404).json({ message: "User not found" });
-        return res.status(200).json({ message: "Be a good user" });
+        return res.status(200).json({ message: "Be a good user", user });
     }
     catch (error) {
         return res.status(500).json({ message: "Internal server error" });

@@ -69,6 +69,7 @@ export const sessionCheck = async () => {
     return {
       ok: true,
       message: res.data.message,
+      user: res.data.user,
     };
   } catch (error) {
     return {
