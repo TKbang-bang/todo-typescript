@@ -10,4 +10,6 @@ protectedRoutes.get("/logout", auth_controller_1.logout);
 // todo
 protectedRoutes.post("/todo", todo_controller_1.createTodo);
 protectedRoutes.get("/todo", todo_controller_1.getTodos);
+protectedRoutes.put("/todo/:id", todo_controller_1.updateTodo);
+protectedRoutes.delete("/todo/:id", todo_controller_1.deleteTodo);
 exports.default = protectedRoutes;

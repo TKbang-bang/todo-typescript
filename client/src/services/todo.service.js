@@ -35,3 +35,37 @@ export const gettingTodos = async () => {
     };
   }
 };
+
+export const setTodoDone = async (id) => {
+  try {
+    const res = await api.put(`/todo/${id}`);
+    if (res.status !== 200) return { ok: false, message: res.data.message };
+
+    return {
+      ok: true,
+      message: res.data.message,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+};
+
+export const deleteTodo = async (id) => {
+  try {
+    const res = await api.delete(`/todo/${id}`);
+    if (res.status !== 200) return { ok: false, message: res.data.message };
+
+    return {
+      ok: true,
+      message: res.data.message,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+};
